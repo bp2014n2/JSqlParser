@@ -529,4 +529,19 @@ public class ExpressionDeParser implements ExpressionVisitor, ItemsListVisitor {
     public void visit(NumericBind bind) {
         buffer.append(bind.toString());
     }
+
+	@Override
+	public void visit(PostgreSQLFromForExpression postgreSQLFromForExpression) {
+		postgreSQLFromForExpression.getSourceExpression().accept(this);
+		
+        if (postgreSQLFromForExpression.hasFromExpression()) {
+            buffer.append(" FROM ");
+            postgreSQLFromForExpression.getFromExpression().accept(this);
+        }
+        
+        if (postgreSQLFromForExpression.hasForExpression()) {
+            buffer.append(" FOR ");
+            postgreSQLFromForExpression.getForExpression().accept(this);
+        }
+	}
 }

@@ -330,4 +330,11 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor, ItemsListVis
     public void visit(NumericBind bind) {
         
     }
+
+	@Override
+	public void visit(PostgreSQLFromForExpression expr) {
+        expr.getSourceExpression().accept(this);
+        expr.getFromExpression().accept(this);
+        expr.getForExpression().accept(this);		
+	}
 }

@@ -511,4 +511,11 @@ public class TablesNamesFinder implements SelectVisitor, FromItemVisitor, Expres
     public void visit(NumericBind bind) {
         
     }
+
+	@Override
+	public void visit(PostgreSQLFromForExpression postgreSQLFromForExpression) {
+		postgreSQLFromForExpression.getSourceExpression().accept(this);
+		postgreSQLFromForExpression.getFromExpression().accept(this);
+		postgreSQLFromForExpression.getForExpression().accept(this);
+	}
 }

@@ -9,6 +9,7 @@ import net.sf.jsqlparser.parser.*;
 import net.sf.jsqlparser.schema.*;
 import net.sf.jsqlparser.statement.*;
 import net.sf.jsqlparser.statement.select.*;
+
 import org.apache.commons.io.*;
 
 import java.io.*;
@@ -618,6 +619,34 @@ public class SelectTest extends TestCase {
         fun = (Function) ((SelectExpressionItem) plainSelect.getSelectItems().get(1)).getExpression();
         assertEquals("cd.COUNT", fun.getName());
         assertTrue(fun.isAllColumns());
+        assertStatementCanBeDeparsedAs(select, statement);
+        
+//    	statement = "SELECT substring(foo BETWEEN 1 AND 2) AS substring FROM mytable";
+//        select = (Select) parserManager.parse(new StringReader(statement));
+//        plainSelect = (PlainSelect) select.getSelectBody();
+//        fun = (Function) ((SelectExpressionItem) plainSelect.getSelectItems().get(0)).getExpression();
+//        assertEquals("substring", fun.getName());
+//        assertEquals("foo from 1 for 4", fun.getParameters().getExpressions().get(0).toString());
+//        PostgreSQLFromForExpression fromFor = ((PostgreSQLFromForExpression) fun.getParameters().getExpressions().get(0));
+//        assertEquals("foo", fromFor.getSourceExpression().toString());
+//        assertEquals("1", fromFor.getFromExpression().toString());
+//        assertEquals("4", fromFor.getForExpression().toString());
+//        assertEquals("substring", ((SelectExpressionItem) plainSelect.getSelectItems().get(0)).getAlias().getName());
+//        assertStatementCanBeDeparsedAs(select, statement);
+    }
+    
+    public void testSubstring() throws JSQLParserException {
+    	String statement = "SELECT substring(foo FROM 1 FOR 4) AS substring FROM mytable";
+        Select select = (Select) parserManager.parse(new StringReader(statement));
+        PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
+        Function fun = (Function) ((SelectExpressionItem) plainSelect.getSelectItems().get(0)).getExpression();
+        assertEquals("substring", fun.getName());
+        assertEquals("foo FROM 1 FOR 4", fun.getParameters().getExpressions().get(0).toString());
+        PostgreSQLFromForExpression fromFor = ((PostgreSQLFromForExpression) fun.getParameters().getExpressions().get(0));
+        assertEquals("foo", fromFor.getSourceExpression().toString());
+        assertEquals("1", fromFor.getFromExpression().toString());
+        assertEquals("4", fromFor.getForExpression().toString());
+        assertEquals("substring", ((SelectExpressionItem) plainSelect.getSelectItems().get(0)).getAlias().getName());
         assertStatementCanBeDeparsedAs(select, statement);
     }
 
