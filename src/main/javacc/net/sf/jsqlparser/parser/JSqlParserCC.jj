@@ -1487,6 +1487,7 @@ Expression PostgreSQLFromForExpression() :
 }
 {
 	sourceExpression=SimpleExpression()
+		//TODO: [ <K_FROM> fromExpression=SimpleExpression() ] [ <K_FOR> forExpression=SimpleExpression() ]
 	    <K_FROM> fromExpression=SimpleExpression() <K_FOR> forExpression=SimpleExpression()
 
 	{
